@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="UP Hackathon Rivals 2026 — a 24-hour national hackathon for bold builders and ambitious ideas.">
+    <title>UP Hackathon Rivals 2026 | Build what matters</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink: #f4f7f2;
+            --muted: #9ca9a4;
+            --surface: #111a18;
+            --surface-2: #17231f;
+            --line: rgba(244, 247, 242, .12);
+            --lime: #ff6b1a;
+            --lime-dark: #d94e0b;
+            --orange: #ff795c;
+            --max: 1160px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body {
+            background: #0b1210;
+            color: var(--ink);
+            font-family: "Plus Jakarta Sans", sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        a { color: inherit; text-decoration: none; }
+        .container { width: min(var(--max), calc(100% - 48px)); margin: 0 auto; }
+        .eyebrow, .mono { font-family: "DM Mono", monospace; }
+        .eyebrow { color: var(--lime); font-size: .75rem; letter-spacing: .15em; text-transform: uppercase; }
+
+        nav {
+            position: fixed; top: 38px; left: 0; right: 0; z-index: 10;
+            border-bottom: 1px solid var(--line);
+            background: rgba(11, 18, 16, .78);
+            backdrop-filter: blur(16px);
+        }
+        .admin-topbar { position: fixed; inset: 0 0 auto; z-index: 11; height: 38px; display: flex; align-items: center; justify-content: center; gap: 12px; border-bottom: 1px solid rgba(255,107,26,.2); background: rgba(17, 21, 32, .96); color: #aeb7c6; font-size: .68rem; }
+        .admin-topbar strong { color: #ff9c89; font-weight: 600; }
+        .admin-topbar a, .admin-topbar button { border: 0; background: none; color: var(--lime); cursor: pointer; font: 600 .68rem "Plus Jakarta Sans", sans-serif; }
+        .admin-topbar a:hover, .admin-topbar button:hover { color: #fff; }
+        .nav-inner { height: 76px; display: flex; align-items: center; justify-content: space-between; }
+        .logo { display: flex; align-items: center; gap: 10px; font-family: "Space Grotesk", sans-serif; font-weight: 700; letter-spacing: -.04em; font-size: 1.08rem; }
+        .logo-mark { width: 34px; height: 34px; object-fit: cover; border-radius: 50%; border: 1px solid rgba(255,107,26,.6); }
+        .logo-wordmark { display: none; }
+        .nav-links { display: flex; gap: 34px; list-style: none; color: var(--muted); font-size: .87rem; }
+        .nav-links a { transition: color .2s ease; }
+        .nav-links a:hover { color: var(--lime); }
+        .nav-cta, .button { display: inline-flex; align-items: center; justify-content: center; gap: 10px; font-weight: 700; font-size: .82rem; border-radius: 7px; transition: transform .2s ease, background .2s ease; }
+        .nav-cta { padding: 10px 17px; border: 1px solid var(--lime); color: var(--lime); }
+        .nav-cta:hover { background: var(--lime); color: #0b1210; }
+        .menu-toggle { display: none; border: 0; background: none; color: var(--ink); font-size: 1.5rem; }
+        .top-search { display: flex; align-items: center; gap: 8px; width: 210px; padding: 9px 12px; border: 1px solid rgba(255,255,255,.12); border-radius: 8px; background: rgba(18,24,37,.62); color: #8791a4; }
+        .top-search input { width: 100%; border: 0; outline: 0; background: transparent; color: var(--ink); font: .75rem "Plus Jakarta Sans", sans-serif; }
+        .top-search input::placeholder { color: #657087; }
+        .top-search kbd { padding: 2px 5px; border: 1px solid rgba(255,255,255,.14); border-radius: 4px; color: #657087; font: .62rem "DM Mono", monospace; }
+
+        .hero { min-height: 760px; padding: 166px 0 100px; position: relative; overflow: hidden; }
+        .hero::after { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .22; background-image: linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px); background-size: 72px 72px; mask-image: linear-gradient(to bottom, black, transparent 78%); }
+        .announcement { position: absolute; top: 96px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 9px; width: max-content; padding: 7px 11px; border: 1px solid rgba(184,255,94,.2); border-radius: 999px; background: rgba(184,255,94,.06); color: #b8c1d1; font: 500 .7rem "DM Mono", monospace; }
+        .announcement strong { color: var(--lime); font-weight: 500; }
+        .pulse-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--lime); box-shadow: 0 0 0 5px rgba(184,255,94,.1); animation: pulse 1.8s ease-in-out infinite; }
+        .hero::before { content: ""; position: absolute; width: 720px; height: 720px; border-radius: 50%; background: rgba(200, 241, 105, .075); filter: blur(4px); top: 40px; right: -270px; }
+        .hero-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 80px; align-items: center; position: relative; }
+        h1, h2, h3 { font-family: "Space Grotesk", sans-serif; }
+        h1 { font-size: clamp(3.5rem, 7vw, 6.7rem); line-height: .98; letter-spacing: -.085em; max-width: 650px; margin: 22px 0 28px; }
+        h1 em { color: var(--lime); font-style: normal; }
+        .hero-copy { max-width: 510px; color: var(--muted); font-size: 1.02rem; }
+        .hero-actions { display: flex; gap: 14px; align-items: center; margin-top: 35px; }
+        .button { position: relative; overflow: hidden; padding: 14px 21px; background: var(--lime); color: #0b1210; }
+        .button::after { content: ""; position: absolute; inset: 0; background: linear-gradient(110deg, transparent 30%, rgba(255,255,255,.55), transparent 70%); transform: translateX(-130%); transition: transform .55s ease; }
+        .button:hover::after { transform: translateX(130%); }
+        .button:hover { background: #e1ff9d; transform: translateY(-3px); }
+        .button.secondary { background: transparent; border: 1px solid var(--line); color: var(--ink); }
+        .button.secondary:hover { border-color: var(--lime); color: var(--lime); }
+        .arrow { font-size: 1.1rem; }
+        .hero-meta { display: flex; align-items: center; gap: 12px; margin-top: 26px; color: #8791a4; font-size: .72rem; }
+        .hero-meta strong { color: #d8dee8; font-weight: 600; }
+        .mini-avatars { display: flex; }
+        .mini-avatars span { display: grid; place-items: center; width: 25px; height: 25px; margin-right: -6px; border: 2px solid #101521; border-radius: 50%; background: #7563ff; color: white; font: 700 .52rem "Space Grotesk", sans-serif; }
+        .mini-avatars span:nth-child(2) { background: #ff795c; }.mini-avatars span:nth-child(3) { background: #36d399; }
+        .hero-art { min-height: 430px; border: 1px solid var(--line); border-radius: 18px; background: linear-gradient(145deg, rgba(23, 35, 31, .95), rgba(15, 25, 22, .55)); position: relative; overflow: hidden; padding: 25px; box-shadow: 0 25px 80px rgba(0, 0, 0, .25); }
+        .hero-art { transform: rotate(1deg); transition: transform .35s ease, box-shadow .35s ease; }
+        .hero-art:hover { transform: rotate(0) translateY(-7px); box-shadow: 0 30px 100px rgba(0,0,0,.55), 0 0 0 1px rgba(184,255,94,.18); }
+        .hero-art::before { content: ""; position: absolute; inset: 50px; border: 1px dashed rgba(200, 241, 105, .3); border-radius: 50%; transform: rotate(-20deg) scaleX(1.3); }
+        .art-top { display: flex; justify-content: space-between; color: var(--muted); font-size: .7rem; position: relative; z-index: 1; }
+        .orb { position: absolute; width: 190px; height: 190px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #efffb8 0, var(--lime) 20%, #55741e 68%, transparent 69%); left: 50%; top: 50%; transform: translate(-50%, -50%); box-shadow: 0 0 90px rgba(200, 241, 105, .4); }
+        .orbit { position: absolute; width: 380px; height: 125px; border: 1px solid rgba(200, 241, 105, .45); border-radius: 50%; left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(-25deg); }
+        .orbit.two { transform: translate(-50%, -50%) rotate(35deg); width: 340px; border-color: rgba(255, 121, 92, .35); }
+        .art-label { position: absolute; bottom: 23px; left: 25px; color: var(--ink); font-size: .78rem; }
+        .floating-tag { position: absolute; right: 22px; bottom: 22px; padding: 8px 11px; border-radius: 5px; border: 1px solid var(--line); background: rgba(11, 18, 16, .65); color: var(--lime); font-size: .68rem; }
+        .floating-chip { position: absolute; z-index: 2; padding: 9px 12px; border: 1px solid rgba(255,255,255,.16); border-radius: 7px; background: rgba(18,24,37,.78); color: #f4f7fb; box-shadow: 0 10px 25px rgba(0,0,0,.28); font: 500 .68rem "DM Mono", monospace; animation: float 4s ease-in-out infinite; }
+        .floating-chip.one { top: 29%; right: 8%; color: #ff9c89; transform: rotate(7deg); }
+        .floating-chip.two { bottom: 30%; left: 7%; color: #9feeff; transform: rotate(-7deg); animation-delay: -1.5s; }
+        .hero-kicker { display: inline-flex; align-items: center; gap: 8px; color: #ff9c89; font: 500 .7rem "DM Mono", monospace; letter-spacing: .12em; text-transform: uppercase; }
+        .hero-kicker::before { content: "✦"; color: #ff795c; font-size: 1rem; }
+        .hero h1 { text-wrap: balance; }
+        .marquee { overflow: hidden; border-top: 1px solid rgba(255,255,255,.08); border-bottom: 1px solid rgba(255,255,255,.08); background: rgba(117,99,255,.06); }
+        .marquee-track { display: flex; width: max-content; padding: 14px 0; animation: marquee 22s linear infinite; }
+        .marquee-track span { margin-right: 34px; color: #aeb7c6; font: 500 .7rem "DM Mono", monospace; letter-spacing: .14em; text-transform: uppercase; }
+        .marquee-track span:nth-child(odd) { color: var(--lime); }
+        .directory-section { padding-top: 75px; }
+        .section-note { max-width: 530px; color: var(--muted); font-size: .88rem; }
+        .hackathon-grid, .winner-grid, .skills-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+        .hackathon-grid { grid-template-columns: repeat(4, 1fr); }
+        .hub-card { position: relative; min-height: 255px; padding: 24px; overflow: hidden; border: 1px solid var(--line); border-radius: 13px; background: rgba(18,24,37,.72); transition: transform .25s, border-color .25s; }
+        .hub-card:hover { transform: translateY(-6px); border-color: rgba(255,107,26,.6); }
+        .hub-card .tag { color: var(--lime); font: .67rem "DM Mono", monospace; letter-spacing: .1em; text-transform: uppercase; }
+        .hub-card h3 { margin: 25px 0 9px; font-size: 1.3rem; }
+        .hub-card p { color: var(--muted); font-size: .8rem; }
+        .hub-card .card-link { position: absolute; right: 22px; bottom: 20px; color: var(--lime); font-size: .8rem; }
+        .hub-card.featured { background: linear-gradient(145deg, rgba(255,107,26,.16), rgba(18,24,37,.72) 55%); }
+        .winner-card { min-height: 190px; }
+        .winner-card .rank { float: right; color: var(--lime); font: 1.4rem "Space Grotesk", sans-serif; }
+        .winner-card h3 { margin-top: 35px; }
+        .winner-card .winner-meta { margin-top: 18px; color: #aeb7c6; font-size: .72rem; }
+        .skill-bar { height: 5px; margin-top: 18px; border-radius: 99px; background: #202a3c; overflow: hidden; }
+        .skill-bar span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--lime), #ffb347); }
+        .participate-wrap { display: grid; grid-template-columns: .8fr 1.2fr; gap: 60px; }
+        .steps { display: grid; gap: 10px; }
+        .step { display: grid; grid-template-columns: 38px 1fr; gap: 15px; padding: 18px; border: 1px solid var(--line); border-radius: 10px; background: rgba(18,24,37,.52); }
+        .step-number { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 7px; background: rgba(255,107,26,.15); color: var(--lime); font: .72rem "DM Mono", monospace; }
+        .step h3 { font-size: .95rem; }.step p { margin-top: 3px; color: var(--muted); font-size: .76rem; }
+        .feedback-box { display: grid; grid-template-columns: 1fr auto; gap: 18px; align-items: end; padding: 34px; border: 1px solid rgba(255,107,26,.32); border-radius: 14px; background: linear-gradient(120deg, rgba(255,107,26,.13), rgba(117,99,255,.08)); }
+        .feedback-box h2 { margin-top: 8px; font-size: 2rem; }
+        .feedback-form { display: flex; gap: 8px; }
+        .feedback-form input { width: 235px; padding: 13px; border: 1px solid var(--line); border-radius: 7px; background: rgba(8,11,18,.65); color: var(--ink); outline: none; font: .78rem "Plus Jakarta Sans", sans-serif; }
+        .feedback-form .button { border: 0; cursor: pointer; }
+        .feedback-status { grid-column: 2; color: var(--lime); font-size: .72rem; }
+        .contact-section { padding: 85px 0 55px; }
+        .contact-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 16px; }
+        .contact-card { padding: 28px; border: 1px solid #242424; border-radius: 12px; background: #0b0b0b; color: #fff; }
+        .contact-card h3 { margin: 10px 0 18px; font-size: 1.25rem; }
+        .contact-card p { color: #a9a9a9; font-size: .82rem; }
+        .contact-list { display: grid; gap: 10px; margin-top: 22px; }
+        .contact-list a { display: flex; align-items: center; justify-content: space-between; gap: 15px; padding: 13px 14px; border: 1px solid #292929; border-radius: 7px; color: #fff; font-size: .8rem; transition: border-color .2s, transform .2s; }
+        .contact-list a:hover { border-color: var(--lime); transform: translateX(4px); }
+        .contact-list span { color: var(--lime); font-family: "DM Mono", monospace; font-size: .7rem; }
+        .contact-note { display: grid; align-content: space-between; min-height: 230px; }
+        .contact-note .eyebrow { color: var(--lime); }
+        .contact-address { color: #a9a9a9; font-size: .78rem; line-height: 1.8; }
+        .contact-address strong { display: block; color: #fff; margin-bottom: 4px; }
+        .contact-socials { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+        .contact-socials a { padding: 8px 11px; border: 1px solid #303030; border-radius: 999px; color: #d6d6d6; font-size: .72rem; }
+        .contact-socials a:hover { color: var(--lime); border-color: var(--lime); }
+        .admin-link { display: block; margin: 15px auto 0; border: 0; background: none; color: #8791a4; cursor: pointer; font: .72rem "Plus Jakarta Sans", sans-serif; }
+        .admin-link[hidden], .auth-switch[hidden] { display: none; }
+        .admin-link:hover { color: var(--lime); }
+        .admin-panel { display: none; position: fixed; inset: 0; z-index: 25; overflow-y: auto; padding: 110px 0 50px; background: #080b12; }
+        .admin-panel.open { display: block; }
+        .admin-panel h2 { margin-top: 12px; }
+        .admin-toolbar { display: flex; justify-content: space-between; gap: 15px; align-items: end; margin-bottom: 30px; }
+        .admin-close { border: 1px solid var(--line); border-radius: 7px; padding: 10px 15px; background: transparent; color: var(--ink); cursor: pointer; }
+        .admin-data-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        .admin-data-card { padding: 22px; border: 1px solid var(--line); border-radius: 12px; background: rgba(18,24,37,.72); }
+        .admin-data-card h3 { margin-bottom: 16px; }
+        .admin-list { display: grid; gap: 10px; max-height: 360px; overflow: auto; }
+        .admin-list article { padding: 12px; border: 1px solid var(--line); border-radius: 7px; color: #aeb7c6; font-size: .74rem; }
+        .admin-list strong { display: block; color: var(--ink); font-size: .8rem; }
+        .user-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+        .remove-user { border: 0; background: transparent; color: #ff8b78; cursor: pointer; font-size: .7rem; }
+        .notice-toast { display: none; position: fixed; right: 22px; bottom: 22px; z-index: 20; width: min(360px, calc(100% - 44px)); padding: 17px; border: 1px solid rgba(255,107,26,.5); border-radius: 10px; background: rgba(18,24,37,.94); box-shadow: 0 15px 40px rgba(0,0,0,.4); }
+        .notice-toast.open { display: block; animation: cardIn .3s ease both; }
+        .notice-toast h3 { margin-bottom: 5px; font-size: .9rem; color: var(--lime); }
+        .notice-toast p { color: #c7cfda; font-size: .75rem; }
+        @media (max-width: 800px) { .admin-data-grid { grid-template-columns: 1fr; } .admin-toolbar { align-items: start; flex-direction: column; } }
+        .stats { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 26px 0; background: linear-gradient(90deg, rgba(184,255,94,.025), transparent 45%, rgba(117,99,255,.035)); }
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); }
+        .stat { border-right: 1px solid var(--line); padding-left: 28px; }
+        .stat:first-child { padding-left: 0; }
+        .stat:last-child { border: 0; }
+        .stat strong { display: block; font-family: "Space Grotesk", sans-serif; font-size: 1.9rem; letter-spacing: -.06em; color: #f4f7fb; }
+        .stat span { color: var(--muted); font-size: .78rem; }
+        .proof-strip { padding: 25px 0 0; color: #657087; font: .7rem "DM Mono", monospace; letter-spacing: .08em; text-transform: uppercase; }
+        .proof-strip-inner { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+        .proof-logos { display: flex; gap: 25px; color: #aeb7c6; letter-spacing: -.04em; font: 700 1rem "Space Grotesk", sans-serif; text-transform: none; }
+
+        section { padding: 120px 0; }
+        .section-heading { display: flex; align-items: end; justify-content: space-between; gap: 30px; margin-bottom: 48px; }
+        h2 { font-size: clamp(2rem, 4vw, 3.5rem); line-height: 1.05; letter-spacing: -.065em; max-width: 560px; }
+        .section-heading p { color: var(--muted); max-width: 350px; font-size: .9rem; }
+        .tracks { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+        .card { position: relative; overflow: hidden; padding: 28px; min-height: 270px; border-radius: 12px; border: 1px solid var(--line); background: radial-gradient(circle at var(--mx, 50%) var(--my, 0%), rgba(184,255,94,.1), transparent 32%), var(--surface); transition: transform .25s, border-color .25s; }
+        .card:hover { transform: translateY(-6px); border-color: rgba(200, 241, 105, .5); }
+        .card-icon { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 10px; background: rgba(200, 241, 105, .12); color: var(--lime); font-size: 1.2rem; margin-bottom: 35px; }
+        .card h3 { font-size: 1.1rem; margin-bottom: 11px; }
+        .card p { color: var(--muted); font-size: .85rem; }
+        .card-number { float: right; color: #53615d; font-size: .75rem; }
+        .experience-grid { display: grid; grid-template-columns: 1.25fr .75fr; gap: 16px; }
+        .experience-card { position: relative; overflow: hidden; min-height: 210px; padding: 28px; border: 1px solid rgba(255,255,255,.11); border-radius: 12px; background: radial-gradient(circle at var(--mx, 50%) var(--my, 0%), rgba(117,99,255,.12), transparent 34%), linear-gradient(145deg, rgba(18,24,37,.9), rgba(11,15,25,.65)); }
+        .experience-card.large { min-height: 300px; }
+        .experience-card::after { content: ""; position: absolute; width: 180px; height: 180px; right: -50px; bottom: -70px; border-radius: 50%; background: rgba(184,255,94,.1); filter: blur(20px); }
+        .experience-card h3 { max-width: 330px; margin: 18px 0 9px; font-size: 1.3rem; letter-spacing: -.04em; }
+        .experience-card p { max-width: 350px; color: var(--muted); font-size: .82rem; }
+        .experience-card .metric { position: absolute; right: 25px; top: 25px; color: var(--lime); font: 1.7rem "DM Mono", monospace; }
+        .signal { position: absolute; right: 28px; bottom: 28px; width: 170px; height: 65px; border-bottom: 1px solid rgba(184,255,94,.65); border-left: 1px solid rgba(184,255,94,.25); transform: skewY(-12deg); background: repeating-linear-gradient(90deg, transparent 0 20px, rgba(184,255,94,.12) 21px 22px); }
+        .mentor-dots { display: flex; margin-top: 25px; }
+        .mentor-dots span { display: grid; place-items: center; width: 32px; height: 32px; margin-right: -7px; border: 2px solid #121825; border-radius: 50%; background: #7563ff; color: #fff; font-size: .62rem; font-weight: 800; }
+        .mentor-dots span:nth-child(2) { background: #ff795c; }.mentor-dots span:nth-child(3) { background: #36d399; }.mentor-dots span:nth-child(4) { background: #b8ff5e; color: #10151e; }
+        @keyframes pulse { 50% { opacity: .45; transform: scale(.8); } }
+        @keyframes float { 0%, 100% { translate: 0 0; } 50% { translate: 0 -9px; } }
+        @keyframes marquee { to { transform: translateX(-50%); } }
+
+        .schedule-wrap { display: grid; grid-template-columns: .85fr 1.15fr; gap: 80px; }
+        .schedule-intro p { color: var(--muted); margin-top: 22px; max-width: 320px; }
+        .timeline { border-top: 1px solid var(--line); }
+        .timeline-item { display: grid; grid-template-columns: 130px 1fr; gap: 26px; padding: 23px 0; border-bottom: 1px solid var(--line); }
+        .timeline-time { color: var(--lime); font-size: .76rem; padding-top: 3px; }
+        .timeline-item h3 { font-size: 1rem; }
+        .timeline-item p { color: var(--muted); font-size: .82rem; margin-top: 4px; }
+
+        .register { padding-top: 20px; }
+        .register-box { padding: 60px; border-radius: 16px; background: var(--lime); color: #0b1210; display: flex; justify-content: space-between; align-items: center; gap: 30px; }
+        .register-box h2 { max-width: 580px; }
+        .register-box p { margin-top: 14px; max-width: 460px; }
+        .register-box .button { background: #0b1210; color: var(--lime); white-space: nowrap; }
+        .register-box .button:hover { background: #253120; }
+        footer { border-top: 1px solid var(--line); padding: 27px 0; color: var(--muted); font-size: .75rem; }
+        .footer-inner { display: flex; justify-content: space-between; gap: 20px; }
+        .footer-links { display: flex; gap: 22px; }
+        .footer-links a:hover { color: var(--lime); }
+
+        .reveal { opacity: 0; transform: translateY(22px); transition: opacity .65s ease, transform .65s ease; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        @media (max-width: 800px) {
+            .container { width: min(var(--max), calc(100% - 32px)); }
+            .contact-grid { grid-template-columns: 1fr; }
+            }
+            .admin-topbar { justify-content: flex-start; padding: 0 16px; gap: 8px; white-space: nowrap; overflow-x: auto; }
+            .admin-topbar > span:nth-child(2) { display: none; }
+            @media (min-width: 801px) and (max-width: 1100px) {
+                .hackathon-grid { grid-template-columns: repeat(2, 1fr); }
+            }
+
+            /* White canvas with black elevated surfaces */
+            body { background: #ffffff; color: #111111; background-image: radial-gradient(circle at 85% 8%, rgba(255,107,26,.08), transparent 25%), radial-gradient(circle at 8% 35%, rgba(0,0,0,.035), transparent 22%); }
+            nav { background: rgba(255,255,255,.88); border-bottom-color: #e7e7e7; }
+            .admin-topbar { background: #050505; border-bottom-color: #2b2b2b; }
+            .logo, .nav-links a, .menu-toggle { color: #111; }
+            .nav-links a:hover, .footer-links a:hover { color: #e85b10; }
+            .nav-cta { color: #111; border-color: #111; }
+            .nav-cta:hover { background: #111; color: #fff; }
+            .hero::after { opacity: .5; background-image: linear-gradient(rgba(0,0,0,.045) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,.045) 1px, transparent 1px); }
+            .hero-copy, .section-heading p, .section-note, .schedule-intro p, .card p, .timeline-item p { color: #5e5e5e; }
+            .hero-art { background: linear-gradient(145deg, #141414, #030303); border-color: #282828; box-shadow: 0 25px 80px rgba(0,0,0,.17); }
+            .stats, .stat, .timeline, .timeline-item, footer { border-color: #e6e6e6; }
+            .stat strong, h1, h2, h3, .timeline-item h3 { color: #111; }
+            .card, .experience-card, .hub-card, .step { background: #0b0b0b; border-color: #292929; color: #fff; box-shadow: 0 12px 30px rgba(0,0,0,.08); }
+            .card h3, .experience-card h3, .hub-card h3, .step h3 { color: #fff; }
+            .card p, .experience-card p, .hub-card p, .step p { color: #aaa; }
+            .track-tabs { background: #0b0b0b; border-color: #292929; }
+            .button.secondary { border-color: #cfcfcf; color: #111; }
+            .button.secondary:hover { border-color: #111; color: #111; }
+            .top-search { background: #fff; border-color: #d9d9d9; color: #555; }
+            .top-search input { color: #111; }
+            .marquee { background: #111; border-color: #111; }
+            .proof-strip, .proof-logos, .stat span, footer { color: #666; }
+            .feedback-box { background: #0b0b0b; border-color: #272727; }
+            .feedback-box h2, .feedback-box .section-note { color: #fff; }
+            .feedback-form input { background: #fff; border-color: #444; color: #111; }
+            .admin-panel { background: #fff; color: #111; }
+            .admin-data-card { background: #0b0b0b; border-color: #292929; color: #fff; }
+            .admin-data-card h3 { color: #fff; }
+            .admin-close { border-color: #222; color: #111; }
+            .auth-modal { background: #0b0b0b; color: #fff; border-color: #333; }
+            .auth-modal h2, .auth-form label { color: #fff; }
+            .auth-form input, .auth-form textarea { background: #fff; color: #111; border-color: #aaa; }
+            .auth-modal > p, .auth-switch { color: #aaa; }
+            /* Final light canvas pass */
+            body { background: #fff !important; color: #111 !important; background-image: radial-gradient(circle at 85% 8%, rgba(255,107,26,.08), transparent 25%), radial-gradient(circle at 8% 35%, rgba(0,0,0,.035), transparent 22%) !important; }
+            nav { background: rgba(255,255,255,.92) !important; border-bottom-color: #e7e7e7 !important; }
+            .logo { color: #111 !important; }
+            .nav-links { color: #555 !important; }
+            .nav-links a:hover { color: #e85b10 !important; }
+            .hero-copy, .section-heading p, .section-note, .schedule-intro p, .timeline-item p { color: #5e5e5e !important; }
+            .stat strong, h1, h2, h3, .timeline-item h3 { color: #111 !important; }
+            .card, .experience-card, .hub-card, .step { background: #0b0b0b !important; color: #fff !important; border-color: #292929 !important; }
+            .card h3, .experience-card h3, .hub-card h3, .step h3 { color: #fff !important; }
+            .card p, .experience-card p, .hub-card p, .step p { color: #aaa !important; }
+            .top-search { background: #fff !important; border-color: #d9d9d9 !important; }
+            .feedback-box { background: #0b0b0b !important; }
+            .admin-panel { background: #fff !important; }
+            .auth-modal { background: #0b0b0b !important; }
+            /* White canvas with the reference-style event directory layout. */
+            body { background: #fff !important; color: #111 !important; }
+            nav { background: rgba(255,255,255,.94) !important; border-bottom-color: #e8e8e8 !important; }
+            .admin-topbar { background: #090909 !important; }
+            .nav-links { color: #626262 !important; }
+            .nav-links a:hover { color: #e85b10 !important; }
+            .top-search { background: #fff !important; border-color: #d8d8d8 !important; color: #777 !important; }
+            .top-search input { color: #111 !important; }
+            .top-search input::placeholder { color: #888 !important; }
+            .hero { background: #fff !important; }
+            .hero::after { opacity: .08; background-image: linear-gradient(rgba(0,0,0,.08) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,.08) 1px, transparent 1px); }
+            .hero::before { background: rgba(255,107,26,.06); }
+            .hero-copy, .section-note, .section-heading > p { color: #606060 !important; }
+            h1, h2, h3, .stat strong, .logo { color: #111 !important; }
+            .hero-art { background: linear-gradient(145deg, #111, #252525) !important; border-color: #333 !important; }
+            .marquee { background: #111 !important; border-color: #222 !important; }
+            .stats { background: #f7f7f7 !important; border-color: #e7e7e7 !important; }
+            .proof-strip { background: #fff !important; border-color: #e7e7e7 !important; }
+            .hub-card { background: #0b0b0b !important; border-color: #292929 !important; color: #fff !important; }
+            .hub-card h3, .hub-card p, .hub-card .winner-meta { color: #fff !important; }
+            .hub-card p { color: #b5b5b5 !important; }
+            .directory-section { padding-top: 84px; }
+            @media (min-width: 801px) {
+                .section-heading { align-items: end; }
+                #upcoming .hackathon-grid { grid-template-columns: repeat(4, 1fr); gap: 14px; }
+                #upcoming .hub-card { min-height: 225px; padding: 22px 20px; }
+            }
+            .announcement { position: relative; top: auto; left: auto; transform: none; margin: 0 auto 28px; }
+            .nav-links { display: none; }
+            .nav-cta { display: inline-flex; }
+            .nav-links.open { display: flex; position: absolute; top: 68px; left: 16px; right: 16px; flex-direction: column; gap: 0; padding: 8px 18px; border: 1px solid var(--line); border-radius: 10px; background: #111a18; }
+            .nav-links.open li { padding: 11px 0; border-bottom: 1px solid var(--line); }
+            .nav-links.open li:last-child { border-bottom: 0; }
+            .menu-toggle { display: block; }
+            .hero { padding-top: 130px; min-height: auto; }
+            .hero-grid, .schedule-wrap { grid-template-columns: 1fr; gap: 45px; }
+            .hero-art { min-height: 350px; }
+            .stats-grid { grid-template-columns: 1fr; gap: 18px; }
+            .stat { border-right: 0; border-bottom: 1px solid var(--line); padding: 0 0 16px; }
+            .stat:last-child { border-bottom: 0; padding-bottom: 0; }
+            .tracks { grid-template-columns: 1fr; }
+            .experience-grid { grid-template-columns: 1fr; }
+            .experience-card.large { min-height: 250px; }
+            .proof-strip-inner { display: block; }
+            .proof-logos { flex-wrap: wrap; margin-top: 15px; }
+            .top-search { display: none; }
+            .hackathon-grid, .winner-grid, .skills-grid { grid-template-columns: 1fr; }
+            .participate-wrap { grid-template-columns: 1fr; gap: 35px; }
+            .feedback-box { display: block; padding: 26px; }
+            .feedback-form { margin-top: 22px; flex-direction: column; }
+            .feedback-form input { width: 100%; }
+            .feedback-status { margin-top: 8px; }
+            .track-tabs { width: 100%; overflow-x: auto; }
+            .track-tab { flex: 1; white-space: nowrap; }
+            .section-heading { display: block; }
+            .section-heading p { margin-top: 18px; }
+            .register-box { padding: 36px 28px; display: block; }
+            .register-box .button { margin-top: 28px; }
+        }
+        @media (max-width: 480px) {
+            h1 { font-size: 3.35rem; }
+            .hero-actions { flex-direction: column; align-items: stretch; }
+            .button { width: 100%; }
+            .timeline-item { grid-template-columns: 1fr; gap: 5px; }
+            .footer-inner { flex-direction: column; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+        }
+
+        /* Deep Slate & Neon Accent theme */
+        body { background: #080b12; color: #f4f7fb; background-image: radial-gradient(circle at 80% 0%, rgba(120, 90, 255, .1), transparent 28%), radial-gradient(circle at 0% 45%, rgba(54, 211, 153, .05), transparent 25%); }
+        nav { background: rgba(8, 11, 18, .78); border-bottom-color: rgba(255,255,255,.09); }
+        .logo { color: #f4f7fb; }
+        .nav-links { color: #8791a4; }
+        .nav-links a:hover { color: #b8ff5e; }
+        .nav-cta { border-color: #b8ff5e; color: #b8ff5e; }
+        .nav-cta:hover { background: #b8ff5e; color: #080b12; }
+        .hero::before { background: rgba(115, 92, 255, .14); }
+        .hero-copy, .section-heading p, .schedule-intro p, .card p, .timeline-item p { color: #8791a4; }
+        .hero-art { background: linear-gradient(145deg, rgba(19, 25, 38, .96), rgba(12, 16, 26, .7)); border-color: rgba(255,255,255,.12); box-shadow: 0 25px 90px rgba(0,0,0,.4); }
+        .hero-art::after { content: ""; position: absolute; inset: 0; background: linear-gradient(120deg, transparent 30%, rgba(184,255,94,.08), transparent 70%); animation: shimmer 5s ease-in-out infinite; pointer-events: none; }
+        .art-top, .art-label { color: #aeb7c6; }
+        .floating-tag { background: rgba(8,11,18,.7); border-color: rgba(184,255,94,.25); }
+        .stats { border-color: rgba(255,255,255,.09); }
+        .stat { border-color: rgba(255,255,255,.09); }
+        .stat span { color: #8791a4; }
+        .card { background: rgba(18, 24, 37, .68); border-color: rgba(255,255,255,.11); box-shadow: inset 0 1px rgba(255,255,255,.04), 0 18px 45px rgba(0,0,0,.14); backdrop-filter: blur(14px); }
+        .card:hover, .card.active { border-color: rgba(184,255,94,.65); box-shadow: 0 0 0 1px rgba(184,255,94,.12), 0 20px 55px rgba(0,0,0,.28); }
+        .card-number { color: #657087; }
+        .timeline { border-color: rgba(255,255,255,.11); }
+        .timeline-item { border-color: rgba(255,255,255,.11); }
+        footer { border-color: rgba(255,255,255,.09); }
+        .footer-links a:hover { color: #b8ff5e; }
+        .track-tabs { display: flex; gap: 8px; padding: 5px; margin-bottom: 18px; width: fit-content; border: 1px solid rgba(255,255,255,.1); border-radius: 9px; background: rgba(18,24,37,.7); }
+        .track-tab { border: 0; border-radius: 6px; padding: 9px 13px; background: transparent; color: #8791a4; font: 600 .75rem "Plus Jakarta Sans", sans-serif; cursor: pointer; transition: .2s ease; }
+        .track-tab:hover, .track-tab.active { background: #b8ff5e; color: #080b12; }
+        .tracks .card { display: none; }
+        .tracks .card.active { display: block; animation: cardIn .35s ease both; }
+        .auth-modal { border-color: rgba(255,255,255,.14); background: rgba(17, 23, 35, .86); color: #f4f7fb; box-shadow: 0 25px 90px rgba(0,0,0,.55); backdrop-filter: blur(22px); }
+        .modal-close { color: #8791a4; }
+        .auth-modal > p, .auth-switch { color: #8791a4; }
+        .auth-form label { color: #aeb7c6; }
+        .auth-form input { border-color: rgba(255,255,255,.13); background: rgba(8,11,18,.65); color: #f4f7fb; }
+        .auth-form input:focus { border-color: #b8ff5e; box-shadow: 0 0 0 3px rgba(184,255,94,.14); }
+        .login-link { color: #b8c1d1; }
+        .login-link:hover { color: #b8ff5e; }
+        @keyframes cardIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes shimmer { 0%, 100% { transform: translateX(-100%); } 50% { transform: translateX(100%); } }
+        .auth-actions { display: flex; align-items: center; gap: 10px; }
+        .login-link { color: #476d37; font-size: .82rem; font-weight: 700; padding: 10px 12px; }
+        .login-link:hover { color: #5d9b24; }
+        .modal-backdrop { display: none; place-items: center; position: fixed; inset: 0; z-index: 30; padding: 20px; background: rgba(20, 33, 28, .45); backdrop-filter: blur(8px); }
+        .modal-backdrop.open { display: grid; }
+        .auth-modal { width: min(440px, 100%); padding: 32px; border: 1px solid #dce5dd; border-radius: 18px; background: #fff; color: #14211c; box-shadow: 0 25px 80px rgba(20, 33, 28, .2); position: relative; }
+        .modal-close { position: absolute; top: 14px; right: 17px; border: 0; background: none; color: #718078; font-size: 1.5rem; cursor: pointer; }
+        .auth-modal h2 { font-size: 2rem; margin: 9px 0 8px; }
+        .auth-modal > p { color: #65746c; font-size: .85rem; margin-bottom: 22px; }
+        .auth-form { display: grid; gap: 12px; }
+        .auth-form label { color: #526159; font-size: .74rem; font-weight: 700; }
+        .auth-form input { width: 100%; margin-top: 5px; border: 1px solid #d5e2d5; border-radius: 7px; padding: 12px 13px; background: #f8fbf7; color: #14211c; font: inherit; outline: none; }
+        .auth-form textarea { width: 100%; min-height: 90px; resize: vertical; border: 1px solid rgba(255,255,255,.13); border-radius: 7px; padding: 12px 13px; background: rgba(8,11,18,.65); color: var(--ink); font: inherit; outline: none; }
+        .auth-form textarea:focus { border-color: var(--lime); }
+        .auth-form input:focus { border-color: #8fbe55; box-shadow: 0 0 0 3px rgba(200, 241, 105, .25); }
+        .auth-form .button { width: 100%; border: 0; cursor: pointer; margin-top: 6px; }
+        .auth-switch { text-align: center; margin-top: 18px; color: #718078; font-size: .78rem; }
+        .auth-switch button { border: 0; background: none; color: #5d9b24; font: inherit; font-weight: 700; cursor: pointer; }
+        .auth-status { min-height: 20px; color: #bd563f; font-size: .78rem; }
+        .auth-status.success { color: #4d8a20; }
+        @media (max-width: 800px) {
+            .auth-actions { margin-left: auto; margin-right: 10px; }
+            .login-link { display: none; }
+        }
+        /* Apply the Upcoming Hackathons card language across the content sections. */
+        body { background: #fff !important; color: #111 !important; }
+        .experience-card,
+        .card,
+        .step,
+        .timeline-item,
+        .feedback-box {
+            background: #0b0b0b !important;
+            border: 1px solid #292929 !important;
+            border-radius: 13px !important;
+            color: #fff !important;
+            box-shadow: none !important;
+        }
+        .experience-card,
+        .card { transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease; }
+        .experience-card:hover,
+        .card:hover,
+        .step:hover,
+        .timeline-item:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255,107,26,.7) !important;
+            box-shadow: 0 14px 35px rgba(0,0,0,.12) !important;
+        }
+        .experience-card h3,
+        .card h3,
+        .step h3,
+        .timeline-item h3,
+        .feedback-box h2 { color: #fff !important; }
+        .experience-card p,
+        .card p,
+        .step p,
+        .timeline-item p,
+        .feedback-box .section-note { color: #b5b5b5 !important; }
+        .experience-card .eyebrow,
+        .card-number,
+        .timeline-time,
+        .step-number { color: #ff795c !important; }
+        .step-number { background: rgba(255,107,26,.16) !important; }
+        .timeline-item { padding: 23px !important; margin-bottom: 10px; }
+        .feedback-box { align-items: center !important; }
+        .feedback-form input { background: #fff !important; border-color: #444 !important; color: #111 !important; }
+        .feedback-form .button { background: #ff795c !important; color: #111 !important; }
+        .tracks .card.active { border-color: rgba(255,107,26,.75) !important; }
+        /* Keep the hero artwork beside the headline and stack the remaining content cards. */
+        .hero-grid { grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr) !important; }
+        #winners .winner-grid,
+        .experience-grid,
+        #tracks .tracks,
+        #schedule .schedule-wrap,
+        #skills .participate-wrap,
+        #skills .skills-grid,
+        #team .hackathon-grid {
+            grid-template-columns: 1fr !important;
+        }
+        @media (max-width: 800px) {
+            .hero-grid { grid-template-columns: 1fr !important; }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-topbar"><span>🔒 <strong>Admin Portal</strong></span><span>Manage participants, notices & event data</span><button type="button" id="topAdminLogin">Admin login</button><a href="mailto:admin@uphackathonrivals.in?subject=UP%20Hackathon%20Rivals%20Admin%20Access%20Request">Request registration ↗</a></div>
+    <nav>
+        <div class="container nav-inner">
+            <a class="logo" href="#"><img class="logo-mark" src="/up-hackathon-logo.png" alt="UP Hackathon Rivals logo"><span>UP Hackathon Rivals<span style="color:var(--lime)">.</span></span></a>
+            <ul class="nav-links">
+                <li><a href="#about">About</a></li>
+                <li><a href="#upcoming">Upcoming</a></li>
+                <li><a href="#tracks">Tracks</a></li>
+                <li><a href="#schedule">Schedule</a></li>
+            </ul>
+            <label class="top-search" aria-label="Search site"><span>⌕</span><input id="siteSearch" type="search" placeholder="Search hackathons..." autocomplete="off"><kbd>/</kbd></label>
+            <div class="auth-actions">
+                <button class="login-link" type="button" data-auth="login">Login</button>
+                <a class="nav-cta" href="#register" data-auth="register">Register <span>↗</span></a>
+            </div>
+            <button class="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false">☰</button>
+        </div>
+    </nav>
+
+    <main>
+        <div class="notice-toast" id="noticeToast" role="status"><h3 id="noticeToastTitle"></h3><p id="noticeToastMessage"></p></div>
+        <section class="hero" id="about">
+            <div class="announcement"><span class="pulse-dot"></span><strong>Applications are open</strong><span>·</span><span>Early access ends in <span id="countdown">18d 04h 22m</span></span></div>
+            <div class="container hero-grid">
+                <div>
+                    <div class="hero-kicker">Not another boring hackathon</div>
+                    <div class="eyebrow" style="margin-top:14px">18—19 October 2026 · New Delhi + Online</div>
+                    <h1>Code. Collaborate. <em>Compete.</em></h1>
+                    <p class="hero-copy">India ke passionate builders ke saath 24 ghante ka high-energy hackathon experience. Real problems solve karo, prototype ship karo aur apni team ko stage tak le jao.</p>
+                    <div class="hero-actions">
+                        <a class="button" href="#register" data-auth="register">Claim your spot <span class="arrow">↗</span></a>
+                        <a class="button secondary" href="#tracks">See the experience</a>
+                    </div>
+                    <div class="hero-meta"><div class="mini-avatars"><span>AK</span><span>RS</span><span>MN</span></div><span><strong>500+ builders</strong> are already in.</span></div>
+                </div>
+                <div class="hero-art" aria-label="Abstract illustration">
+                    <div class="art-top mono"><span>UP_HACKATHON_RIVALS_26</span><span>01 / 04</span></div>
+                    <div class="orbit"></div><div class="orbit two"></div><div class="orb"></div>
+                    <div class="floating-chip one">✦ SHIP FAST</div>
+                    <div class="floating-chip two">↗ 500+ MAKERS</div>
+                    <div class="art-label mono">MAKE SOMETHING<br>PEOPLE NEED.</div>
+                    <div class="floating-tag mono">● LIVE BUILD</div>
+                </div>
+            </div>
+        </section>
+
+        <div class="marquee" aria-label="Event highlights">
+            <div class="marquee-track"><span>Build without limits</span><span>Make noise</span><span>Meet your people</span><span>Ship something real</span><span>Build without limits</span><span>Make noise</span><span>Meet your people</span><span>Ship something real</span></div>
+        </div>
+
+        <div class="stats" id="metrics">
+            <div class="container stats-grid">
+                <div class="stat"><strong>₹3L</strong><span>prize pool & grants</span></div>
+                <div class="stat"><strong>24 hrs</strong><span>to build, test & ship</span></div>
+                <div class="stat"><strong>500+</strong><span>builders joining the sprint</span></div>
+            </div>
+        </div>
+        <div class="proof-strip">
+            <div class="container proof-strip-inner"><span>Built with support from</span><div class="proof-logos"><span>aws</span><span>GitHub</span><span>figma</span><span>vercel</span></div></div>
+        </div>
+
+        <section id="upcoming" class="directory-section reveal">
+            <div class="container">
+                <div class="section-heading">
+                    <div><div class="eyebrow">Find your next build</div><h2>Upcoming hackathons.</h2></div>
+                    <p class="section-note">Discover events, choose your challenge, and start building with a community that wants to see you win.</p>
+                </div>
+                <div class="hackathon-grid searchable">
+                    <article class="hub-card featured"><span class="tag">Featured · 18—19 Oct</span><h3>UP Hackathon Rivals 2026</h3><p>24-hour national sprint for ambitious builders. New Delhi + online.</p><a class="card-link" href="#register">Join this build ↗</a></article>
+                    <article class="hub-card"><span class="tag">Coming soon · Nov 2026</span><h3>Campus Launchpad</h3><p>Turn a campus problem into a product with mentors, teams and prizes.</p><a class="card-link" href="#register">Get notified ↗</a></article>
+                    <article class="hub-card"><span class="tag">Open track · Dec 2026</span><h3>Impact Sprint</h3><p>Build for climate, accessibility and communities that need better tools.</p><a class="card-link" href="#register">Explore ↗</a></article>
+                    <article class="hub-card"><span class="tag">Online · 07—08 Nov</span><h3>Rivals Remote</h3><p>Join from anywhere, form a remote team and ship a demo in 36 hours.</p><a class="card-link" href="#register">Participate online ↗</a></article>
+                </div>
+            </div>
+        </section>
+
+        <section class="reveal" id="winners">
+            <div class="container">
+                <div class="section-heading"><div><div class="eyebrow">Built by rivals</div><h2>Ideas that made it out.</h2></div><p class="section-note">Meet the teams who showed up, shipped fast and turned a weekend prototype into a real conversation.</p></div>
+                <div class="winner-grid searchable">
+                    <article class="hub-card winner-card"><span class="rank">01</span><span class="tag">Grand winner · 2025</span><h3>MedMitra</h3><p>AI-powered health navigation for underserved communities.</p><div class="winner-meta">Team Orbit · AI for good</div></article>
+                    <article class="hub-card winner-card"><span class="rank">02</span><span class="tag">Runner up · 2025</span><h3>GreenRoute</h3><p>Smarter routes that reduce delivery emissions in growing cities.</p><div class="winner-meta">Team Terra · Climate & cities</div></article>
+                    <article class="hub-card winner-card"><span class="rank">03</span><span class="tag">People's choice · 2025</span><h3>Signa</h3><p>Real-time sign language translation for everyday conversations.</p><div class="winner-meta">Team Echo · Open innovation</div></article>
+                </div>
+            </div>
+        </section>
+
+        <section class="reveal">
+            <div class="container">
+                <div class="section-heading">
+                    <div><div class="eyebrow">More than a hackathon</div><h2>Everything you need to ship.</h2></div>
+                    <p>A focused environment designed to turn rough ideas into demos people remember.</p>
+                </div>
+                <div class="experience-grid">
+                    <article class="experience-card large"><span class="eyebrow">01 / Momentum</span><h3>Move from blank canvas to working prototype.</h3><p>Structured checkpoints, late-night snacks, and a room full of people who are just as obsessed with building as you are.</p><div class="signal"></div></article>
+                    <article class="experience-card"><span class="metric">24/7</span><span class="eyebrow">02 / Mentors</span><h3>Get unstuck, faster.</h3><p>Meet product leaders, engineers, and founders during dedicated office hours.</p><div class="mentor-dots"><span>AK</span><span>RS</span><span>MN</span><span>+9</span></div></article>
+                    <article class="experience-card"><span class="metric">₹3L</span><span class="eyebrow">03 / Rewards</span><h3>Make impact. Win big.</h3><p>Prizes, grants, and a launchpad for the teams that dare to go further.</p></article>
+                </div>
+            </div>
+        </section>
+
+        <section id="tracks" class="reveal">
+            <div class="container">
+                <div class="section-heading">
+                    <div><div class="eyebrow">Choose your challenge</div><h2>Big problems need brave ideas.</h2></div>
+                    <p>Pick a track that gets you thinking. Or break the rules and show us something we have never seen before.</p>
+                </div>
+                <div class="track-tabs" role="tablist" aria-label="Hackathon tracks">
+                    <button class="track-tab active" type="button" role="tab" aria-selected="true" data-track-filter="all">All tracks</button>
+                    <button class="track-tab" type="button" role="tab" aria-selected="false" data-track-filter="ai">AI & ML</button>
+                    <button class="track-tab" type="button" role="tab" aria-selected="false" data-track-filter="climate">Climate</button>
+                    <button class="track-tab" type="button" role="tab" aria-selected="false" data-track-filter="open">Open innovation</button>
+                </div>
+                <div class="tracks">
+                    <article class="card active" data-track="ai"><span class="card-number mono">01</span><div class="card-icon">✦</div><h3>AI for good</h3><p>Build intelligent tools for healthcare, education, accessibility, and a more human future.</p></article>
+                    <article class="card active" data-track="climate"><span class="card-number mono">02</span><div class="card-icon">↯</div><h3>Climate & cities</h3><p>Reimagine the way we move, live, and grow with technology that leaves the planet better.</p></article>
+                    <article class="card active" data-track="open"><span class="card-number mono">03</span><div class="card-icon">⌘</div><h3>Open innovation</h3><p>No brief. No limits. Find a problem you care about and turn your point of view into a prototype.</p></article>
+                </div>
+            </div>
+        </section>
+
+        <section id="schedule" class="reveal">
+            <div class="container schedule-wrap">
+                <div class="schedule-intro"><div class="eyebrow">The 24-hour sprint</div><h2>One weekend. Infinite possibilities.</h2><p>From first brainstorm to final demo, you will have the people, tools, and space to make your best work.</p></div>
+                <div class="timeline">
+                    <div class="timeline-item"><span class="timeline-time mono">18 OCT · 09:00</span><div><h3>Doors open & team forming</h3><p>Check in, grab breakfast, meet your future collaborators.</p></div></div>
+                    <div class="timeline-item"><span class="timeline-time mono">18 OCT · 11:00</span><div><h3>Kickoff & build begins</h3><p>Problem statements, mentor intros, then it is all yours.</p></div></div>
+                    <div class="timeline-item"><span class="timeline-time mono">18 OCT · 20:00</span><div><h3>Mentor office hours</h3><p>Get unstuck with focused feedback from industry experts.</p></div></div>
+                    <div class="timeline-item"><span class="timeline-time mono">19 OCT · 11:00</span><div><h3>Demos, judging & awards</h3><p>Show the world what you built. Celebrate every bold attempt.</p></div></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="skills" class="reveal">
+            <div class="container">
+                <div class="section-heading"><div><div class="eyebrow">Start where you are</div><h2>Tried to code? Good. Now build.</h2></div><p class="section-note">You do not need to know everything to participate. You need a problem, a team and the courage to learn in public.</p></div>
+                <div class="participate-wrap">
+                    <div class="steps">
+                        <div class="step"><span class="step-number">01</span><div><h3>Pick a problem</h3><p>Choose a track that you genuinely care about.</p></div></div>
+                        <div class="step"><span class="step-number">02</span><div><h3>Find your people</h3><p>Solo or with a team of up to four builders.</p></div></div>
+                        <div class="step"><span class="step-number">03</span><div><h3>Learn and ship</h3><p>Mentors, APIs and workshops help you go from idea to demo.</p></div></div>
+                        <div class="step"><span class="step-number">04</span><div><h3>Show your work</h3><p>Pitch your prototype and celebrate the attempt.</p></div></div>
+                    </div>
+                    <div class="skills-grid">
+                        <article class="hub-card"><span class="tag">Skill 01</span><h3>Product thinking</h3><p>Frame a real user problem and validate it quickly.</p><div class="skill-bar"><span style="width:88%"></span></div></article>
+                        <article class="hub-card"><span class="tag">Skill 02</span><h3>Build fundamentals</h3><p>Use HTML, APIs, Git and your favourite stack to make it real.</p><div class="skill-bar"><span style="width:72%"></span></div></article>
+                        <article class="hub-card"><span class="tag">Skill 03</span><h3>Pitch & demo</h3><p>Tell a clear story, show the product and make judges care.</p><div class="skill-bar"><span style="width:80%"></span></div></article>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="team" class="reveal">
+            <div class="container">
+                <div class="section-heading"><div><div class="eyebrow">The people behind the sprint</div><h2>Teams, mentors, community.</h2></div><p class="section-note">Your contribution is bigger than a line of code. Bring perspective, design, research, storytelling or pure curiosity.</p></div>
+                <div class="hackathon-grid">
+                    <article class="hub-card"><span class="tag">For builders</span><h3>Bring the spark.</h3><p>Code, design, research, manage a team or learn something new. Every role moves the idea forward.</p></article>
+                    <article class="hub-card"><span class="tag">For mentors</span><h3>Give the shortcut.</h3><p>Share feedback, technical direction and the lessons you wish you knew at the start.</p></article>
+                    <article class="hub-card"><span class="tag">For partners</span><h3>Back the bold.</h3><p>Support the next generation with tools, credits, challenges and opportunities.</p></article>
+                </div>
+            </div>
+        </section>
+
+        <section id="register" class="register reveal">
+            <div class="container">
+                <div class="register-box"><div><div class="eyebrow" style="color:#344517">Ready when you are</div><h2>Have an idea? Give it 24 hours.</h2><p>Applications close 10 October. No experience required — just curiosity.</p></div><a class="button" href="#register" data-auth="register">Start your application <span>↗</span></a></div>
+            </div>
+        </section>
+        <section id="feedback" class="reveal">
+            <div class="container">
+                <div class="feedback-box"><div><div class="eyebrow">Help us build better</div><h2>What should we add next?</h2><p class="section-note">Tell us what would make your hackathon experience more useful.</p></div><form class="feedback-form" id="feedbackForm"><input type="text" name="feedback" placeholder="Your idea or feedback..." required><button class="button" type="submit">Send feedback ↗</button></form><div class="feedback-status" id="feedbackStatus" aria-live="polite"></div></div>
+            </div>
+        </section>
+    </main>
+
+    <section id="contact" class="contact-section">
+        <div class="container">
+            <div class="section-heading">
+                <div><div class="eyebrow">Stay connected</div><h2>Talk to the organisation.</h2></div>
+                <p class="section-note">Registration help, partnerships, sponsorships, media or any official communication ke liye neeche diye channels use karein.</p>
+            </div>
+            <div class="contact-grid">
+                <div class="contact-card">
+                    <div class="eyebrow">Official channels</div>
+                    <h3>We are one message away.</h3>
+                    <p>Please include your name, team and event name so our team can respond faster.</p>
+                    <div class="contact-list">
+                        <a href="mailto:hello@uphackathonrivals.in"><b>hello@uphackathonrivals.in</b><span>EMAIL ↗</span></a>
+                        <a href="tel:+919876543210"><b>+91 98765 43210</b><span>CALL ↗</span></a>
+                        <a href="mailto:admin@uphackathonrivals.in?subject=Partnership%20with%20UP%20Hackathon%20Rivals"><b>Partnership & sponsorship desk</b><span>WRITE ↗</span></a>
+                    </div>
+                </div>
+                <div class="contact-card contact-note">
+                    <div><div class="eyebrow">Find us online</div><h3>Follow the build.</h3><p>Deadline updates, workshops and community highlights ke liye follow karein.</p><div class="contact-socials"><a href="https://www.instagram.com/" target="_blank" rel="noreferrer">Instagram ↗</a><a href="https://www.linkedin.com/" target="_blank" rel="noreferrer">LinkedIn ↗</a><a href="https://twitter.com/" target="_blank" rel="noreferrer">X / Twitter ↗</a><a href="https://github.com/" target="_blank" rel="noreferrer">GitHub ↗</a></div></div>
+                    <div class="contact-address"><strong>UP Hackathon Rivals</strong>New Delhi, India<br>Mon–Sat · 10:00 AM — 6:00 PM IST</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="modal-backdrop" id="authModal" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+        <div class="auth-modal">
+            <button class="modal-close" type="button" aria-label="Close">&times;</button>
+            <div class="eyebrow">UP Hackathon Rivals 2026</div>
+            <h2 id="authTitle">Welcome back.</h2>
+            <p id="authSubtitle">Login with your email and a one-time password.</p>
+            <form class="auth-form" id="authForm">
+                <div id="profileFields" hidden>
+                    <label>First name<input name="firstName" autocomplete="given-name" placeholder="First name"></label>
+                    <label>Middle name<input name="middleName" autocomplete="additional-name" placeholder="Middle name (optional)"></label>
+                    <label>Last name<input name="lastName" autocomplete="family-name" placeholder="Last name"></label>
+                    <label>Mobile number<input name="mobile" type="tel" autocomplete="tel" placeholder="+91 98765 43210"></label>
+                    <label>College / organisation<input name="college" placeholder="Where do you build?"></label>
+                    <label>Team name<input name="teamName" placeholder="Your team name"></label>
+                </div>
+                <label id="emailLabel">Email address<input name="email" type="email" autocomplete="email" placeholder="you@example.com" required></label>
+                <label id="identifierLabel" hidden>Admin user ID / mobile<input name="identifier" autocomplete="username" placeholder="Admin ID or mobile number"></label>
+                <label id="passwordLabel" hidden>Password<input name="password" type="password" autocomplete="current-password" placeholder="Admin password"></label>
+                <div id="otpField" hidden>
+                    <label>One-time password<input name="otp" inputmode="numeric" maxlength="6" placeholder="Enter 6-digit OTP"></label>
+                </div>
+                <div class="auth-status" id="authStatus" aria-live="polite"></div>
+                <button class="button" type="submit" id="authSubmit">Send OTP <span>↗</span></button>
+            </form>
+            <div class="auth-switch"><span id="switchText">New here?</span> <button type="button" id="switchAuth">Create an account</button></div>
+            <button class="admin-link" type="button" id="adminLoginSwitch">Admin login →</button>
+        </div>
+    </div>
+
+    <section class="admin-panel" id="adminPanel" aria-label="Admin dashboard">
+        <div class="container">
+            <div class="admin-toolbar"><div><div class="eyebrow">Private workspace</div><h2>Admin dashboard.</h2><p class="section-note">Registration and feedback data is visible only after admin authentication.</p></div><button class="admin-close" type="button" id="adminLogout">Log out</button></div>
+            <div class="admin-data-grid"><div class="admin-data-card"><h3>Registered users <span class="tag" id="registrationCount"></span></h3><div class="admin-list" id="registrationList"></div></div><div class="admin-data-card"><h3>Feedback <span class="tag" id="feedbackCount"></span></h3><div class="admin-list" id="feedbackList"></div></div></div>
+            <div class="admin-data-card" style="margin-top:15px"><h3>Add user manually</h3><form class="auth-form" id="addUserForm"><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px"><input name="firstName" placeholder="First name" required><input name="middleName" placeholder="Middle name"><input name="lastName" placeholder="Last name" required></div><input name="email" type="email" placeholder="Email" required><input name="mobile" placeholder="Mobile number" required><input name="college" placeholder="College / organisation"><input name="teamName" placeholder="Team name"><button class="button" type="submit">Add user ↗</button><div class="auth-status" id="addUserStatus"></div></form></div>
+            <div class="admin-data-card" style="margin-top:15px"><h3>Publish notice</h3><form class="auth-form" id="noticeForm"><input name="title" placeholder="Notice title" required><textarea name="message" placeholder="Write an update for all participants..." required></textarea><button class="button" type="submit">Publish notice ↗</button><div class="auth-status" id="noticeStatus"></div></form></div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container footer-inner"><span>© 2026 UP Hackathon Rivals. Built by the community.</span><div class="footer-links"><a href="#contact">Contact</a><a href="#feedback">Feedback</a><a href="#about">Back to top ↑</a></div></div>
+    </footer>
+
+    <script>
+        const reveals = document.querySelectorAll(".reveal");
+        const authModal = document.querySelector("#authModal");
+        const authForm = document.querySelector("#authForm");
+        authForm.noValidate = true;
+        const profileFields = document.querySelector("#profileFields");
+        const otpField = document.querySelector("#otpField");
+        const authStatus = document.querySelector("#authStatus");
+        const authTitle = document.querySelector("#authTitle");
+        const authSubtitle = document.querySelector("#authSubtitle");
+        const authSubmit = document.querySelector("#authSubmit");
+        const switchAuth = document.querySelector("#switchAuth");
+        const switchText = document.querySelector("#switchText");
+        const trackTabs = document.querySelectorAll(".track-tab");
+        const trackCards = document.querySelectorAll(".tracks .card");
+        const siteSearch = document.querySelector("#siteSearch");
+        const searchableItems = document.querySelectorAll(".searchable .hub-card");
+        const feedbackForm = document.querySelector("#feedbackForm");
+        const feedbackStatus = document.querySelector("#feedbackStatus");
+        const adminLoginSwitch = document.querySelector("#adminLoginSwitch");
+        const topAdminLogin = document.querySelector("#topAdminLogin");
+        const adminPanel = document.querySelector("#adminPanel");
+        const adminLogout = document.querySelector("#adminLogout");
+        const identifierLabel = document.querySelector("#identifierLabel");
+        const passwordLabel = document.querySelector("#passwordLabel");
+        const emailLabel = document.querySelector("#emailLabel");
+        const noticeForm = document.querySelector("#noticeForm");
+        const noticeStatus = document.querySelector("#noticeStatus");
+        const addUserForm = document.querySelector("#addUserForm");
+        const addUserStatus = document.querySelector("#addUserStatus");
+        const noticeToast = document.querySelector("#noticeToast");
+        const noticeToastTitle = document.querySelector("#noticeToastTitle");
+        const noticeToastMessage = document.querySelector("#noticeToastMessage");
+        let adminToken = "";
+        let adminOtpPending = false;
+        siteSearch.addEventListener("input", () => {
+            const query = siteSearch.value.trim().toLowerCase();
+            searchableItems.forEach((item) => {
+                item.hidden = query && !item.textContent.toLowerCase().includes(query);
+            });
+        });
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "/" && document.activeElement !== siteSearch) {
+                event.preventDefault();
+                siteSearch.focus();
+            }
+        });
+        noticeForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            const values = Object.fromEntries(new FormData(noticeForm));
+            const response = await fetch("/api/admin/notices", { method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer ${adminToken}` }, body: JSON.stringify(values) });
+            const result = await response.json();
+            noticeStatus.textContent = result.message || (response.ok ? "Notice published." : "Unable to publish notice.");
+            if (response.ok) { noticeForm.reset(); showLatestNotice(values.title, values.message); }
+        });
+        addUserForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            const response = await fetch("/api/admin/users", { method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer ${adminToken}` }, body: JSON.stringify(Object.fromEntries(new FormData(addUserForm))) });
+            const result = await response.json();
+            addUserStatus.textContent = result.message || (response.ok ? "User added." : "Unable to add user.");
+            if (response.ok) { addUserForm.reset(); await loadAdminData(); }
+        });
+        feedbackForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            const message = feedbackForm.elements.feedback.value;
+            try {
+                const response = await fetch("/api/feedback", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ message }) });
+                const result = await response.json();
+                if (!response.ok) throw new Error(result.message || "Unable to save feedback.");
+                feedbackStatus.textContent = "Thanks — your feedback is on the board.";
+                feedbackForm.reset();
+            } catch (error) {
+                feedbackStatus.textContent = error.message;
+            }
+        });
+        async function loadAdminData() {
+            const response = await fetch("/api/admin/data", { headers: { Authorization: `Bearer ${adminToken}` } });
+            const result = await response.json();
+            if (!response.ok) throw new Error(result.message || "Unable to load dashboard.");
+            const registrations = result.data.registrations || [];
+            const feedback = result.data.feedback || [];
+            document.querySelector("#registrationCount").textContent = registrations.length;
+            document.querySelector("#feedbackCount").textContent = feedback.length;
+            document.querySelector("#registrationList").innerHTML = registrations.length ? registrations.slice().reverse().map((item) => `<article class="user-row"><span><strong>${escapeHtml(item.name || item.email)}</strong>${escapeHtml(item.mobile || "")} · ${escapeHtml(item.email)}</span><button class="remove-user" data-email="${encodeURIComponent(item.email)}">Remove</button></article>`).join("") : "<article>No registrations yet.</article>";
+            document.querySelector("#feedbackList").innerHTML = feedback.length ? feedback.slice().reverse().map((item) => `<article>${escapeHtml(item.message)}<br><small>${new Date(item.createdAt).toLocaleString()}</small></article>`).join("") : "<article>No feedback yet.</article>";
+            document.querySelectorAll(".remove-user").forEach((button) => button.addEventListener("click", async () => { await fetch(`/api/admin/users/${button.dataset.email}`, { method: "DELETE", headers: { Authorization: `Bearer ${adminToken}` } }); await loadAdminData(); }));
+        }
+        function showLatestNotice(title, message) { noticeToastTitle.textContent = title; noticeToastMessage.textContent = message; noticeToast.classList.add("open"); setTimeout(() => noticeToast.classList.remove("open"), 7000); }
+        async function loadNotices() { const response = await fetch("/api/notices"); const result = await response.json(); if (result.notices?.[0]) showLatestNotice(result.notices[0].title, result.notices[0].message); }
+        loadNotices();
+        function escapeHtml(value) {
+            return String(value).replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" })[character]);
+        }
+        adminLogout.addEventListener("click", async () => {
+            await fetch("/api/auth/admin-logout", { method: "POST", headers: { Authorization: `Bearer ${adminToken}` } });
+            adminToken = "";
+            adminPanel.classList.remove("open");
+        });
+        document.querySelectorAll(".card, .experience-card").forEach((card) => {
+            card.addEventListener("pointermove", (event) => {
+                const rect = card.getBoundingClientRect();
+                card.style.setProperty("--mx", `${event.clientX - rect.left}px`);
+                card.style.setProperty("--my", `${event.clientY - rect.top}px`);
+            });
+        });
+        const countdown = document.querySelector("#countdown");
+        const deadline = new Date("2026-10-10T23:59:59+05:30").getTime();
+        function updateCountdown() {
+            const remaining = Math.max(0, deadline - Date.now());
+            const days = Math.floor(remaining / 86400000);
+            const hours = Math.floor((remaining % 86400000) / 3600000);
+            const minutes = Math.floor((remaining % 3600000) / 60000);
+            countdown.textContent = `${days}d ${String(hours).padStart(2, "0")}h ${String(minutes).padStart(2, "0")}m`;
+        }
+        updateCountdown();
+        setInterval(updateCountdown, 60000);
+        let authMode = "login";
+        let otpSent = false;
+        trackTabs.forEach((tab) => {
+            tab.addEventListener("click", () => {
+                const filter = tab.dataset.trackFilter;
+                trackTabs.forEach((item) => {
+                    const active = item === tab;
+                    item.classList.toggle("active", active);
+                    item.setAttribute("aria-selected", String(active));
+                });
+                trackCards.forEach((card) => {
+                    card.classList.toggle("active", filter === "all" || card.dataset.track === filter);
+                });
+            });
+        });
+        function setAuthMode(mode) {
+            authMode = mode;
+            otpSent = false;
+            adminOtpPending = false;
+            authForm.reset();
+            document.querySelector("#adminPasswordLabel")?.remove();
+            profileFields.hidden = mode !== "register";
+            otpField.hidden = true;
+            identifierLabel.hidden = mode !== "admin";
+            passwordLabel.hidden = mode !== "admin";
+            emailLabel.hidden = mode === "admin";
+            authTitle.textContent = mode === "register" ? "Join the rivals." : "Welcome back.";
+            authSubtitle.textContent = mode === "register" ? "Create your profile and bring your idea to life." : "Login with your email and a one-time password.";
+            authSubmit.innerHTML = mode === "admin" ? 'Verify admin credentials <span>↗</span>' : 'Send OTP <span>↗</span>';
+            switchText.textContent = mode === "register" ? "Already registered?" : "New here?";
+            switchAuth.textContent = mode === "register" ? "Login instead" : "Create an account";
+            authStatus.textContent = "";
+            authStatus.className = "auth-status";
+            adminLoginSwitch.textContent = "Admin login →";
+            adminLoginSwitch.hidden = mode === "admin";
+            switchAuth.parentElement.hidden = mode === "admin";
+        }
+        function openAuth(mode) {
+            setAuthMode(mode);
+            authModal.classList.add("open");
+            authForm.elements.email.focus();
+        }
+        document.querySelectorAll("[data-auth]").forEach((trigger) => {
+            trigger.addEventListener("click", (event) => {
+                event.preventDefault();
+                openAuth(trigger.dataset.auth);
+            });
+        });
+        document.querySelector(".modal-close").addEventListener("click", () => authModal.classList.remove("open"));
+        authModal.addEventListener("click", (event) => {
+            if (event.target === authModal) authModal.classList.remove("open");
+        });
+        switchAuth.addEventListener("click", () => setAuthMode(authMode === "login" ? "register" : "login"));
+        adminLoginSwitch.addEventListener("click", () => {
+            setAuthMode("admin");
+            authTitle.textContent = "Admin access.";
+            authSubtitle.textContent = "Sign in to view registrations and participant feedback.";
+            authSubmit.innerHTML = "Verify admin credentials <span>↗</span>";
+            switchText.textContent = "";
+            switchAuth.textContent = "";
+        });
+        topAdminLogin.addEventListener("click", () => {
+            openAuth("login");
+            adminLoginSwitch.click();
+        });
+        authForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            const data = Object.fromEntries(new FormData(authForm));
+            if (authMode === "admin") {
+                try {
+                    const endpoint = adminOtpPending ? "/api/auth/admin-verify-otp" : "/api/auth/admin-login";
+                    const body = adminOtpPending ? { otp: data.otp } : { identifier: data.identifier, password: data.password };
+                    const response = await fetch(endpoint, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+                    const result = await response.json();
+                    if (!response.ok) throw new Error(result.message || "Admin login failed.");
+                    if (!adminOtpPending) {
+                        adminOtpPending = true;
+                        otpField.hidden = false;
+                        authSubmit.innerHTML = "Verify email OTP <span>↗</span>";
+                        authStatus.textContent = result.demoOtp ? `Local demo OTP: ${result.demoOtp}` : result.message;
+                        authStatus.className = "auth-status success";
+                        return;
+                    }
+                    adminToken = result.token;
+                    authModal.classList.remove("open");
+                    adminPanel.classList.add("open");
+                    await loadAdminData();
+                } catch (error) {
+                    authStatus.textContent = error.message;
+                }
+                return;
+            }
+            const endpoint = otpSent ? "/api/auth/verify-otp" : "/api/auth/send-otp";
+            const payload = otpSent ? { ...data, type: authMode } : { email: data.email };
+            authStatus.textContent = "Please wait...";
+            try {
+                const response = await fetch(endpoint, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+                const result = await response.json();
+                if (!response.ok) throw new Error(result.message || "Something went wrong.");
+                if (!otpSent) {
+                    otpSent = true;
+                    otpField.hidden = false;
+                    authSubmit.innerHTML = "Verify & continue <span>↗</span>";
+                    authStatus.textContent = result.demoOtp ? `Demo OTP: ${result.demoOtp}` : result.message;
+                    authStatus.className = "auth-status success";
+                } else {
+                    authStatus.textContent = result.message || "Done!";
+                    authStatus.className = "auth-status success";
+                    authSubmit.disabled = true;
+                }
+            } catch (error) {
+                authStatus.textContent = error.message;
+                authStatus.className = "auth-status";
+            }
+        });
+        const menuToggle = document.querySelector(".menu-toggle");
+        const navLinks = document.querySelector(".nav-links");
+        menuToggle.addEventListener("click", () => {
+            const isOpen = navLinks.classList.toggle("open");
+            menuToggle.setAttribute("aria-expanded", String(isOpen));
+            menuToggle.setAttribute("aria-label", isOpen ? "Close menu" : "Open menu");
+            menuToggle.textContent = isOpen ? "×" : "☰";
+        });
+        navLinks.querySelectorAll("a").forEach((link) => {
+            link.addEventListener("click", () => {
+                navLinks.classList.remove("open");
+                menuToggle.setAttribute("aria-expanded", "false");
+                menuToggle.setAttribute("aria-label", "Open menu");
+                menuToggle.textContent = "☰";
+            });
+        });
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add("active");
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.12 });
+        reveals.forEach((element) => observer.observe(element));
+    </script>
+</body>
+</html>
