@@ -16,19 +16,22 @@ const PORT = Number(process.env.PORT) || 5000;
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+app.get('/up-hackathon-logo.png', (req, res) => {
+    res.sendFile(path.join(__dirname, 'up-hackathon-logo.png'));
+});
 
 const otpStore = new Map();
 const usersDb = new Map();
 const adminSessions = new Map();
-const dataDirectory = path.join(__dirname, 'data');
-const dataFile = path.join(dataDirectory, 'submissions.json');
+const dataFile = path.join(__dirname, 'submissions.json');
 const adminEmail = (process.env.ADMIN_EMAIL || 'admin@uphackathonrivals.in').toLowerCase();
 const adminUserId = process.env.ADMIN_USER_ID || 'admin';
 const adminMobile = process.env.ADMIN_MOBILE || '';
 const adminPassword = process.env.ADMIN_PASSWORD || 'UPRivals@2026';
 
-if (!fs.existsSync(dataDirectory)) fs.mkdirSync(dataDirectory, { recursive: true });
 if (!fs.existsSync(dataFile)) fs.writeFileSync(dataFile, JSON.stringify({ registrations: [], feedback: [] }, null, 2));
 
 function readStoredData() {
